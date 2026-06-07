@@ -2,360 +2,365 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DG Diagnostic Tool – Technician Edition</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a0e14">
+<title>DG Diagnostic Tool — Technician Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
 <style>
-    * { box-sizing: border-box; }
-    body {
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-        margin: 0;
-        padding: 0;
-    }
+:root{
+    --bg:#0a0e14;
+    --bg-2:#0e131c;
+    --panel:#131a25;
+    --panel-2:#172030;
+    --line:#243246;
+    --line-soft:#1c2738;
+    --txt:#e7eef7;
+    --txt-dim:#8aa0bc;
+    --txt-faint:#5f748f;
+    --accent:#2bb3ff;
+    --accent-dim:#1c87c9;
+    --pass:#32d583;
+    --pass-bg:rgba(50,213,131,.12);
+    --fail:#ff5d5d;
+    --fail-bg:rgba(255,93,93,.12);
+    --warn:#ffb02e;
+    --warn-bg:rgba(255,176,46,.12);
+    --radius:12px;
+    --radius-sm:8px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{
+    font-family:'Saira Semi Condensed',system-ui,sans-serif;
+    background:var(--bg);
+    color:var(--txt);
+    min-height:100vh;
+    min-height:100dvh;
+    line-height:1.4;
+    background-image:
+        radial-gradient(900px 500px at 80% -10%, rgba(43,179,255,.08), transparent 60%),
+        radial-gradient(700px 500px at -10% 110%, rgba(43,179,255,.05), transparent 55%),
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+    background-size:auto, auto, 38px 38px, 38px 38px;
+}
 
-    /* ── PAGE SYSTEM ── */
-    .page { display: none; }
-    .page.active { display: block; }
+/* ── PAGE SYSTEM ── */
+.page{display:none;}
+.page.active{display:block;animation:fade .35s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
 
-    /* ── COVER SHEET ── */
-    .cover-page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: #ffffff;
-        padding: 40px 20px;
-    }
-    .cover-logo {
-        width: 200px;
-        height: auto;
-        margin-bottom: 48px;
-    }
-    .cover-title {
-        font-size: 26px;
-        font-weight: 700;
-        color: #222;
-        text-align: center;
-        letter-spacing: 0.5px;
-        margin-bottom: 12px;
-    }
-    .cover-credit {
-        font-size: 14px;
-        color: #888;
-        text-align: center;
-        margin-bottom: 48px;
-        letter-spacing: 0.3px;
-    }
-    .nav-btn {
-        padding: 12px 48px;
-        font-size: 16px;
-        font-weight: 700;
-        background: #0078d4;
-        color: #fff;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        letter-spacing: 0.5px;
-        transition: background .15s;
-    }
-    .nav-btn:hover { background: #005fa3; }
-    .nav-btn:active { background: #004578; }
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 60px;}
 
-    /* ── LITERATURE PAGE ── */
-    .lit-page {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 20px 24px 32px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .lit-page h1 {
-        text-align: center;
-        font-size: 22px;
-        color: #222;
-        margin: 0 0 20px 0;
-    }
-    .lit-section {
-        margin-bottom: 18px;
-        border-radius: 4px;
-        overflow: hidden;
-        border: 1px solid #ddd;
-    }
-    .lit-header {
-        padding: 8px 12px;
-        font-weight: 700;
-        font-size: 14px;
-        color: #fff;
-    }
-    .lit-header.blue    { background: #2a6496; }
-    .lit-header.green   { background: #3a7d44; }
-    .lit-header.orange  { background: #d4820a; }
-    .lit-header.red     { background: #b33030; }
-    .lit-header.purple  { background: #6b3fa0; }
-    .lit-header.teal    { background: #1a7a7a; }
-    .lit-body {
-        padding: 10px 14px;
-        background: #fafafa;
-        font-size: 13px;
-        line-height: 1.65;
-        color: #333;
-    }
-    .lit-body ol {
-        margin: 4px 0;
-        padding-left: 22px;
-    }
-    .lit-body ol li {
-        margin-bottom: 4px;
-    }
-    .lit-body ul {
-        margin: 4px 0;
-        padding-left: 20px;
-    }
-    .lit-body ul li {
-        margin-bottom: 4px;
-    }
-    .lit-body .ref-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 6px 0;
-        font-size: 13px;
-    }
-    .lit-body .ref-table th,
-    .lit-body .ref-table td {
-        border: 1px solid #ccc;
-        padding: 4px 8px;
-        text-align: left;
-    }
-    .lit-body .ref-table th {
-        background: #eee;
-        font-weight: 600;
-    }
-    .lit-nav {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-        margin-top: 20px;
-    }
-    .nav-btn-outline {
-        padding: 10px 36px;
-        font-size: 14px;
-        font-weight: 700;
-        background: #fff;
-        color: #0078d4;
-        border: 2px solid #0078d4;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: all .15s;
-    }
-    .nav-btn-outline:hover { background: #f0f7ff; }
+/* ── LOGO / MONOGRAM ── */
+.dg-logo{display:block;}
+.logo-fallback{
+    width:96px;height:96px;border-radius:20px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Saira Semi Condensed';font-weight:700;font-size:42px;letter-spacing:1px;
+    color:var(--bg);background:var(--accent);
+    box-shadow:0 0 0 1px var(--line),0 14px 40px rgba(43,179,255,.35);
+    margin:0 auto;
+}
 
-    /* ── DIAGNOSTIC TOOL ── */
-    .tool-container {
-        max-width: 900px;
-        margin: 0 auto;
-        background: #ffffff;
-        border-radius: 6px;
-        padding: 16px 20px 24px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-    }
-    .logo-container {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 8px;
-    }
-    .dg-logo {
-        width: 180px;
-        height: auto;
-        display: block;
-        margin: 0 auto 8px auto;
-    }
-    .subtitle {
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        color: #444;
-        margin-bottom: 10px;
-        letter-spacing: 0.5px;
-    }
-    .divider {
-        width: 100%;
-        height: 2px;
-        background: #d0d0d0;
-        margin: 8px 0 14px 0;
-        border-radius: 2px;
-    }
-    #resetBtn {
-        width: 90px;
-        padding: 4px 6px;
-        font-size: 12px;
-        font-weight: 700;
-        background: #ff4444;
-        color: #fff;
-        border: 2px solid #000;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-bottom: 12px;
-        display: block;
-    }
-    .section {
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 12px;
-        overflow: hidden;
-    }
-    .section-header {
-        background: #ffe680;
-        padding: 8px 10px;
-        font-weight: bold;
-        cursor: pointer;
-        user-select: none;
-    }
-    .section-content {
-        padding: 10px;
-        display: none;
-        background: #fafafa;
-    }
-    .section-content.active {
-        display: flex;
-        gap: 24px;
-    }
-    .section-content.single-col.active {
-        display: block;
-    }
-    .column {
-        flex: 1;
-        min-width: 0;
-    }
-    label {
-        display: block;
-        font-size: 13px;
-        margin-top: 6px;
-        margin-bottom: 2px;
-    }
-    input[type="number"],
-    input[type="text"] {
-        width: 65px;
-        padding: 2px 4px;
-        font-size: 12px;
-        border: 1px solid #999;
-        border-radius: 3px;
-    }
+/* ── COVER ── */
+.cover-page{
+    min-height:100vh;min-height:100dvh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:48px 24px;gap:0;position:relative;
+}
+.cover-logo-wrap{margin-bottom:34px;}
+.cover-logo{width:150px;height:auto;}
+.cover-eyebrow{
+    font-size:13px;font-weight:600;letter-spacing:3.5px;text-transform:uppercase;
+    color:var(--accent);margin-bottom:14px;
+}
+.cover-title{
+    font-size:clamp(28px,7vw,40px);font-weight:700;letter-spacing:.5px;
+    line-height:1.05;margin-bottom:10px;
+}
+.cover-sub{
+    font-size:15px;color:var(--txt-dim);letter-spacing:.5px;margin-bottom:6px;
+}
+.cover-credit{
+    font-size:13px;color:var(--txt-faint);letter-spacing:.4px;margin-bottom:40px;
+}
+.cover-credit b{color:var(--txt-dim);font-weight:600;}
 
-    /* ── Feedback Strip ── */
-    .feedback-card {
-        background: #ffffff;
-        border: 1px solid #d0d4da;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 420px;
-        margin: 1.2rem auto;
-        padding: 1.4rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,.06);
-    }
-    .feedback-card h2 {
-        font-size: 1.05rem;
-        font-weight: 700;
-        margin: 0 0 .15rem;
-    }
-    .feedback-card .fb-sub {
-        font-size: .82rem;
-        color: #6b7280;
-        margin-bottom: 1rem;
-    }
-    .fb-stars {
-        display: flex;
-        gap: .35rem;
-        margin-bottom: 1rem;
-    }
-    .fb-stars span {
-        font-size: 2rem;
-        cursor: pointer;
-        color: #c5cad2;
-        transition: color .15s, transform .15s;
-        user-select: none;
-        -webkit-user-select: none;
-    }
-    .fb-stars span.active { color: #f59e0b; }
-    .fb-stars span:hover  { transform: scale(1.15); }
-    #fbComment {
-        width: 100%;
-        border: 1px solid #d0d4da;
-        border-radius: 6px;
-        padding: .55rem .65rem;
-        font-size: .88rem;
-        font-family: inherit;
-        resize: vertical;
-        min-height: 64px;
-        box-sizing: border-box;
-    }
-    #fbComment:focus {
-        outline: none;
-        border-color: #0078d4;
-        box-shadow: 0 0 0 2px rgba(0,120,212,.15);
-    }
-    .fb-btn-row {
-        display: flex;
-        align-items: center;
-        gap: .75rem;
-        margin-top: .75rem;
-    }
-    #fbSend {
-        padding: .5rem 1.4rem;
-        border: none;
-        border-radius: 6px;
-        font-size: .88rem;
-        font-weight: 600;
-        cursor: pointer;
-        background: #0078d4;
-        color: #fff;
-    }
-    #fbSend:hover:not(:disabled) { background: #005fa3; }
-    #fbSend:disabled { opacity: .45; cursor: default; }
-    .fb-status { font-size: .82rem; color: #6b7280; }
-    .fb-status.success { color: #16a34a; font-weight: 600; }
-    .fb-status.error   { color: #dc2626; font-weight: 600; }
-    .fb-device {
-        margin-top: 1rem;
-        padding-top: .6rem;
-        border-top: 1px solid #e5e7eb;
-        font-size: .72rem;
-        color: #9ca3af;
-        text-align: center;
-    }
+/* ── BUTTONS ── */
+.btn{
+    font-family:inherit;cursor:pointer;border:none;border-radius:var(--radius-sm);
+    font-weight:700;letter-spacing:.6px;transition:transform .08s, background .15s, box-shadow .15s;
+    -webkit-user-select:none;user-select:none;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{
+    background:var(--accent);color:#04111c;padding:15px 44px;font-size:16px;
+    box-shadow:0 8px 28px rgba(43,179,255,.32);
+}
+.btn-primary:hover{background:#48bdff;}
+.btn-ghost{
+    background:transparent;color:var(--accent);border:1.5px solid var(--line);
+    padding:13px 32px;font-size:14px;
+}
+.btn-ghost:hover{border-color:var(--accent);background:rgba(43,179,255,.06);}
+
+.cover-actions{display:flex;flex-direction:column;gap:12px;align-items:center;}
+.cover-hint{font-size:12px;color:var(--txt-faint);letter-spacing:.3px;}
+
+/* ── TOP BAR (lit + tool) ── */
+.topbar{
+    display:flex;align-items:center;gap:12px;
+    padding:14px 16px;margin:-20px -16px 20px;
+    background:linear-gradient(var(--bg-2),rgba(14,19,28,.6));
+    border-bottom:1px solid var(--line-soft);
+    position:sticky;top:0;z-index:30;backdrop-filter:blur(8px);
+}
+.topbar .tb-logo{height:30px;width:auto;}
+.topbar .tb-logo-fb{
+    width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--bg);
+    display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;
+}
+.topbar .tb-title{font-weight:700;font-size:16px;letter-spacing:.5px;flex:1;line-height:1.1;}
+.topbar .tb-title small{display:block;font-size:11px;font-weight:500;color:var(--accent);letter-spacing:2px;text-transform:uppercase;}
+.tb-btn{
+    background:var(--panel-2);color:var(--txt-dim);border:1px solid var(--line);
+    border-radius:8px;padding:8px 12px;font-family:inherit;font-weight:600;font-size:13px;
+    cursor:pointer;letter-spacing:.4px;display:inline-flex;align-items:center;gap:6px;
+}
+.tb-btn:active{transform:scale(.96);}
+.tb-btn.danger{color:#ffb4b4;border-color:rgba(255,93,93,.4);}
+.tb-btn.danger:hover{background:var(--fail-bg);}
+
+/* ── LITERATURE ── */
+.lit-title{font-size:24px;font-weight:700;letter-spacing:.5px;margin:8px 0 4px;}
+.lit-intro{color:var(--txt-dim);font-size:14px;margin-bottom:22px;}
+.lit-section{
+    border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;
+    margin-bottom:14px;background:var(--panel);
+}
+.lit-header{
+    padding:12px 16px;font-weight:700;font-size:15px;letter-spacing:.5px;
+    color:#fff;display:flex;align-items:center;gap:10px;
+}
+.lit-header::before{content:"";width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.85);}
+.lit-header.blue{background:#1f5d8f;}
+.lit-header.green{background:#2f7a45;}
+.lit-header.orange{background:#c4760a;}
+.lit-header.red{background:#a82f2f;}
+.lit-header.purple{background:#5e3a96;}
+.lit-header.teal{background:#1a7373;}
+.lit-body{padding:14px 16px;font-size:14px;line-height:1.7;color:var(--txt);}
+.lit-body p{margin:0 0 8px;color:var(--txt-dim);}
+.lit-body ol,.lit-body ul{margin:6px 0;padding-left:22px;}
+.lit-body li{margin-bottom:6px;}
+.lit-body strong{color:var(--txt);font-weight:700;}
+.lit-body b{color:var(--accent);}
+.ref-table{width:100%;border-collapse:collapse;margin:8px 0 2px;font-size:13.5px;}
+.ref-table th,.ref-table td{border:1px solid var(--line);padding:8px 10px;text-align:left;}
+.ref-table th{background:var(--panel-2);font-weight:600;color:var(--txt-dim);letter-spacing:.4px;}
+.ref-table td{color:var(--txt);}
+
+.page-nav{display:flex;justify-content:center;gap:12px;margin-top:24px;flex-wrap:wrap;}
+
+/* ── PROGRESS RAIL ── */
+.progress-wrap{margin-bottom:18px;}
+.progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-size:13px;color:var(--txt-dim);letter-spacing:.5px;font-weight:500;}
+.progress-count{font-family:'JetBrains Mono';font-size:13px;color:var(--accent);font-weight:700;}
+.progress-bar{height:6px;background:var(--panel-2);border-radius:99px;overflow:hidden;border:1px solid var(--line-soft);}
+.progress-fill{height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .3s ease;}
+
+/* ── SECTIONS ── */
+.section{
+    border:1px solid var(--line-soft);border-radius:var(--radius);overflow:hidden;
+    margin-bottom:12px;background:var(--panel);
+}
+.section-header{
+    background:var(--panel-2);padding:14px 16px;font-weight:700;font-size:15px;
+    letter-spacing:.5px;cursor:pointer;-webkit-user-select:none;user-select:none;
+    display:flex;align-items:center;gap:12px;
+}
+.section-header .sh-num{
+    width:24px;height:24px;border-radius:7px;background:var(--bg);color:var(--accent);
+    border:1px solid var(--line);font-family:'JetBrains Mono';font-size:12px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.section-header .sh-name{flex:1;}
+.section-header .sh-chip{
+    font-size:11px;font-weight:700;letter-spacing:.4px;padding:3px 9px;border-radius:99px;
+    font-family:'JetBrains Mono';
+}
+.section-header .sh-chip.ok{background:var(--pass-bg);color:var(--pass);}
+.section-header .sh-chip.bad{background:var(--fail-bg);color:var(--fail);}
+.section-header .sh-chip.warn{background:var(--warn-bg);color:var(--warn);}
+.section-header .sh-caret{color:var(--txt-faint);font-size:13px;transition:transform .2s;}
+.section.open .sh-caret{transform:rotate(180deg);}
+
+.section-content{display:none;padding:14px 16px 16px;}
+.section-content.active{display:block;}
+.col-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+.col-grid .col-head{
+    font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+    color:var(--txt-faint);padding-bottom:4px;border-bottom:1px solid var(--line-soft);margin-bottom:4px;
+}
+
+/* ── FIELD ── */
+.field{margin-bottom:12px;}
+.field:last-child{margin-bottom:0;}
+.field-label{
+    display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+    font-size:14px;font-weight:500;color:var(--txt);margin-bottom:5px;
+}
+.field-label .hint{font-size:11px;color:var(--txt-faint);font-weight:500;letter-spacing:.2px;white-space:nowrap;}
+.field-control{
+    display:flex;align-items:center;gap:0;
+    background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius-sm);
+    overflow:hidden;transition:border-color .15s, box-shadow .15s;
+}
+.field-control input{
+    flex:1;width:100%;min-width:0;background:transparent;border:none;outline:none;
+    color:var(--txt);font-family:'JetBrains Mono';font-size:18px;font-weight:700;
+    padding:13px 14px;letter-spacing:.5px;
+}
+.field-control input::-webkit-outer-spin-button,
+.field-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+.field-control input[type=number]{-moz-appearance:textfield;}
+.field-control .unit{
+    font-size:13px;font-weight:600;color:var(--txt-faint);padding:0 14px 0 6px;letter-spacing:.5px;
+    font-family:'JetBrains Mono';
+}
+.field-control .state-ic{
+    width:0;overflow:hidden;display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;transition:width .15s;flex-shrink:0;
+}
+.field-control:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,179,255,.18);}
+
+.field.is-pass .field-control{border-color:var(--pass);background:var(--pass-bg);}
+.field.is-fail .field-control{border-color:var(--fail);background:var(--fail-bg);}
+.field.is-warn .field-control{border-color:var(--warn);background:var(--warn-bg);}
+.field.is-pass .state-ic{width:34px;color:var(--pass);}
+.field.is-fail .state-ic{width:34px;color:var(--fail);}
+.field.is-warn .state-ic{width:34px;color:var(--warn);}
+.field.is-pass .state-ic::after{content:"✓";}
+.field.is-fail .state-ic::after{content:"✕";}
+.field.is-warn .state-ic::after{content:"!";}
+
+/* ── RESULTS PANEL ── */
+.results{
+    border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);
+    margin:22px 0 8px;overflow:hidden;
+}
+.results-head{
+    padding:15px 16px;display:flex;align-items:center;gap:12px;
+    border-bottom:1px solid var(--line-soft);background:var(--panel-2);
+}
+.results-head .rh-dot{width:10px;height:10px;border-radius:50%;background:var(--txt-faint);flex-shrink:0;}
+.results-head.all-pass .rh-dot{background:var(--pass);box-shadow:0 0 10px var(--pass);}
+.results-head.has-fail .rh-dot{background:var(--fail);box-shadow:0 0 10px var(--fail);}
+.results-head.has-warn .rh-dot{background:var(--warn);box-shadow:0 0 10px var(--warn);}
+.results-head .rh-title{font-weight:700;font-size:16px;letter-spacing:.5px;flex:1;}
+.results-head .rh-stat{font-family:'JetBrains Mono';font-size:13px;color:var(--txt-dim);font-weight:700;}
+.results-body{padding:14px 16px;}
+.res-empty{color:var(--txt-faint);font-size:14px;text-align:center;padding:8px 0;}
+.flag{
+    display:flex;align-items:center;gap:10px;padding:10px 0;
+    border-bottom:1px solid var(--line-soft);font-size:14px;
+}
+.flag:last-child{border-bottom:none;}
+.flag .f-ic{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;flex-shrink:0;}
+.flag.f-fail .f-ic{background:var(--fail-bg);color:var(--fail);}
+.flag.f-warn .f-ic{background:var(--warn-bg);color:var(--warn);}
+.flag .f-name{flex:1;color:var(--txt);font-weight:500;}
+.flag .f-val{font-family:'JetBrains Mono';font-weight:700;color:var(--txt);}
+.flag .f-target{font-family:'JetBrains Mono';font-size:12px;color:var(--txt-faint);margin-left:8px;}
+.res-note{
+    margin-top:14px;padding:12px 14px;border-radius:var(--radius-sm);
+    background:var(--bg);border:1px solid var(--line-soft);font-size:13.5px;color:var(--txt-dim);line-height:1.6;
+}
+.res-note .rn-title{color:var(--accent);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;}
+.res-note ul{margin:0;padding-left:18px;}
+.res-note li{margin-bottom:5px;}
+.res-note li b{color:var(--txt);}
+
+/* ── FEEDBACK ── */
+.feedback-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    margin:22px 0 0;padding:18px 16px;
+}
+.feedback-card h2{font-size:17px;font-weight:700;margin:0 0 3px;letter-spacing:.4px;}
+.fb-sub{font-size:13px;color:var(--txt-dim);margin:0 0 14px;}
+.fb-stars{display:flex;gap:8px;margin-bottom:14px;}
+.fb-stars span{font-size:34px;cursor:pointer;color:var(--line);transition:color .15s,transform .15s;
+    -webkit-user-select:none;user-select:none;line-height:1;}
+.fb-stars span.active{color:var(--warn);}
+.fb-stars span:hover{transform:scale(1.15);}
+#fbComment{
+    width:100%;background:var(--bg);border:1.5px solid var(--line);border-radius:var(--radius-sm);
+    padding:11px 12px;font-size:15px;font-family:inherit;color:var(--txt);resize:vertical;min-height:64px;
+}
+#fbComment:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(43,179,255,.15);}
+.fb-btn-row{display:flex;align-items:center;gap:14px;margin-top:12px;}
+#fbSend{
+    padding:12px 28px;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;
+    cursor:pointer;background:var(--accent);color:#04111c;font-family:inherit;letter-spacing:.5px;
+}
+#fbSend:hover:not(:disabled){background:#48bdff;}
+#fbSend:disabled{opacity:.4;cursor:default;}
+.fb-status{font-size:13px;color:var(--txt-dim);}
+.fb-status.success{color:var(--pass);font-weight:700;}
+.fb-status.error{color:var(--fail);font-weight:700;}
+.fb-device{margin-top:14px;padding-top:10px;border-top:1px solid var(--line-soft);
+    font-size:11px;color:var(--txt-faint);text-align:center;letter-spacing:.3px;}
+
+@media (max-width:520px){
+    .col-grid{gap:12px 12px;}
+    .field-control input{font-size:17px;padding:12px 12px;}
+    .topbar .tb-title{font-size:15px;}
+    .btn-primary{width:100%;}
+}
 </style>
 </head>
 
 <body>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 1: COVER SHEET                        -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ PAGE 1: COVER ═══════════ -->
 <div class="page active" id="pageCover">
     <div class="cover-page">
-        <img src="DG-LOGO.png" class="cover-logo" alt="DG Logo">
-        <div class="cover-title">Hybrid HWT Diagnostic Tool</div>
-        <div class="cover-credit">Created by Danny G.</div>
-        <button class="nav-btn" onclick="goToPage('pageLit')">Next</button>
+        <div class="cover-logo-wrap">
+            <img src="DG-LOGO.png" class="dg-logo cover-logo" alt="DG Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="logo-fallback" style="display:none;">DG</div>
+        </div>
+        <div class="cover-eyebrow">Technician Edition</div>
+        <div class="cover-title">Hybrid HWT<br>Diagnostic Tool</div>
+        <div class="cover-sub">Heat-pump water heater field diagnostics</div>
+        <div class="cover-credit">Created by <b>Danny G.</b></div>
+        <div class="cover-actions">
+            <button class="btn btn-primary" onclick="goToPage('pageLit')">Begin &nbsp;&rarr;</button>
+            <button class="btn-link" onclick="goToPage('pageTool')" style="background:none;border:none;color:var(--txt-faint);font-family:inherit;font-size:13px;cursor:pointer;letter-spacing:.4px;padding:4px;">Skip to diagnostic</button>
+        </div>
     </div>
 </div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 2: LITERATURE / REFERENCE             -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ PAGE 2: LITERATURE ═══════════ -->
 <div class="page" id="pageLit">
-<div style="padding: 20px;">
-<div class="lit-page">
-
-    <h1>Diagnostic Reference Guide</h1>
+<div class="wrap">
+    <div class="topbar">
+        <img src="DG-LOGO.png" class="tb-logo" alt="DG" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tb-logo-fb" style="display:none;">DG</div>
+        <div class="tb-title">Reference Guide<small>Hybrid HWT</small></div>
+        <button class="tb-btn" onclick="goToPage('pageCover')">&larr; Cover</button>
+    </div>
 
     <!-- THERMISTOR READINGS -->
     <div class="lit-section">
         <div class="lit-header blue">Thermistor Readings</div>
         <div class="lit-body">
-            <p>Get Room Temp with Thermometer, Get Water Temp from Controller</p>
+            <p>Get Room Temp with thermometer, get Water Temp from controller.</p>
             <ol>
                 <li>Hold <strong>MODE</strong> and <strong>NEXT</strong> — you should get <strong>TST</strong></li>
                 <li>Press the <strong>DOWN</strong> arrow until <strong>CP</strong> appears</li>
@@ -393,26 +398,10 @@
         <div class="lit-header green">Ideal Temperatures</div>
         <div class="lit-body">
             <table class="ref-table">
-                <tr>
-                    <th>Sensor</th>
-                    <th>Range</th>
-                    <th>Notes</th>
-                </tr>
-                <tr>
-                    <td><strong>DT</strong> – Discharge</td>
-                    <td>Less than 160°F</td>
-                    <td>Should increase 10–15°F between tests</td>
-                </tr>
-                <tr>
-                    <td><strong>ET</strong> – Evaporator</td>
-                    <td>Less than 70°F</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td><strong>ST</strong> – Suction</td>
-                    <td>38°F – 90°F</td>
-                    <td></td>
-                </tr>
+                <tr><th>Sensor</th><th>Range</th><th>Notes</th></tr>
+                <tr><td><strong>DT</strong> – Discharge</td><td>Less than 160°F</td><td>Should increase 10–15°F between tests</td></tr>
+                <tr><td><strong>ET</strong> – Evaporator</td><td>Less than 70°F</td><td></td></tr>
+                <tr><td><strong>ST</strong> – Suction</td><td>38°F – 90°F</td><td></td></tr>
             </table>
         </div>
     </div>
@@ -488,144 +477,184 @@
         </div>
     </div>
 
-    <div class="lit-nav">
-        <button class="nav-btn-outline" onclick="goToPage('pageCover')">Back</button>
-        <button class="nav-btn" onclick="goToPage('pageTool')">Start Diagnostic</button>
+    <div class="page-nav">
+        <button class="btn btn-ghost" onclick="goToPage('pageCover')">Back</button>
+        <button class="btn btn-primary" onclick="goToPage('pageTool')">Start Diagnostic &nbsp;&rarr;</button>
     </div>
-
-</div>
 </div>
 </div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- PAGE 3: DIAGNOSTIC TOOL                    -->
-<!-- ═══════════════════════════════════════════ -->
+<!-- ═══════════ PAGE 3: DIAGNOSTIC TOOL ═══════════ -->
 <div class="page" id="pageTool">
-<div style="padding: 20px;">
-<div class="tool-container">
-
-    <div class="logo-container">
-        <img src="DG-LOGO.png" class="dg-logo" alt="DG Logo">
+<div class="wrap">
+    <div class="topbar">
+        <img src="DG-LOGO.png" class="tb-logo" alt="DG" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="tb-logo-fb" style="display:none;">DG</div>
+        <div class="tb-title">Diagnostic<small>Technician Edition</small></div>
+        <button class="tb-btn" onclick="goToPage('pageLit')">Guide</button>
+        <button class="tb-btn danger" id="resetBtn" onclick="resetTool()">Reset</button>
     </div>
-    <div class="subtitle">Technician Edition</div>
-    <div class="divider"></div>
 
-    <button id="resetBtn" onclick="resetTool()">Reset</button>
+    <!-- PROGRESS -->
+    <div class="progress-wrap">
+        <div class="progress-row">
+            <span class="progress-label">Readings entered</span>
+            <span class="progress-count" id="progressCount">0 / 27</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
 
     <!-- SECTION 1: TEMPS -->
-    <div class="section" id="section1">
-        <div class="section-header" onclick="toggleSection('section1', true)">Temps</div>
+    <div class="section open" id="section1">
+        <div class="section-header" onclick="toggleSection('section1')">
+            <span class="sh-num">1</span><span class="sh-name">Temps</span>
+            <span class="sh-chip" id="chip1"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col active" id="section1-content">
-            <label>Room Temp</label>
-            <input type="number" id="roomTemp">
-            <label>Water Temp</label>
-            <input type="number" id="waterTemp" onkeydown="handleTempsEnter(event)">
+            <div class="field">
+                <div class="field-label">Room Temp <span class="hint">ambient reference</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="roomTemp"><span class="state-ic"></span><span class="unit">°F</span></div>
+            </div>
+            <div class="field">
+                <div class="field-label">Water Temp <span class="hint">from controller</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="waterTemp" onkeydown="handleTempsEnter(event)"><span class="state-ic"></span><span class="unit">°F</span></div>
+            </div>
         </div>
     </div>
 
     <!-- SECTION 2: THERMISTORS -->
     <div class="section" id="section2">
-        <div class="section-header" onclick="toggleSection('section2')">Thermistors</div>
+        <div class="section-header" onclick="toggleSection('section2')">
+            <span class="sh-num">2</span><span class="sh-name">Thermistors</span>
+            <span class="sh-chip" id="chip2"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content" id="section2-content">
-            <div class="column">
-                <label>DT - Blue</label>
-                <input type="number" id="dt" oninput="validateThermistor('dt',1,160,0)">
-                <label>ST - Yellow</label>
-                <input type="number" id="st" oninput="validateThermistor('st',38,90,0)">
-                <label>ET - Grey</label>
-                <input type="number" id="et" oninput="validateThermistor('et',5,70,0)">
-                <label>AT - White</label>
-                <input type="number" id="at" oninput="validateAT('at')">
-                <label>Current</label>
-                <input type="number" id="amps" oninput="validateThermistor('amps',1,1.7,0)">
-            </div>
-            <div class="column">
-                <label>DT - Blue</label>
-                <input type="number" id="dt_b" oninput="validateThermistor('dt_b',1,160,0)">
-                <label>ST - Yellow</label>
-                <input type="number" id="st_b" oninput="validateThermistor('st_b',38,90,0)">
-                <label>ET - Grey</label>
-                <input type="number" id="et_b" oninput="validateThermistor('et_b',5,70,0)">
-                <label>AT - White</label>
-                <input type="number" id="at_b" oninput="validateAT('at_b')">
-                <label>Current</label>
-                <input type="number" id="amps_b"
-                       oninput="validateThermistor('amps_b',1,1.7,0)"
-                       onkeydown="handleThermLastEnter(event)">
+            <div class="col-grid">
+                <div class="col">
+                    <div class="col-head">Test 1</div>
+                    <div class="field"><div class="field-label">DT · Blue <span class="hint">&lt; 160°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="dt" oninput="validateThermistor('dt',1,160,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">ST · Yellow <span class="hint">38–90°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="st" oninput="validateThermistor('st',38,90,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">ET · Grey <span class="hint">&lt; 70°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="et" oninput="validateThermistor('et',5,70,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">AT · White <span class="hint">≈ room ±8%</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="at" oninput="validateAT('at')"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">Current <span class="hint">1–1.7 A</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="amps" oninput="validateThermistor('amps',1,1.7,0)"><span class="state-ic"></span><span class="unit">A</span></div></div>
+                </div>
+                <div class="col">
+                    <div class="col-head">Test 2</div>
+                    <div class="field"><div class="field-label">DT · Blue <span class="hint">&lt; 160°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="dt_b" oninput="validateThermistor('dt_b',1,160,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">ST · Yellow <span class="hint">38–90°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="st_b" oninput="validateThermistor('st_b',38,90,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">ET · Grey <span class="hint">&lt; 70°F</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="et_b" oninput="validateThermistor('et_b',5,70,0)"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">AT · White <span class="hint">≈ room ±8%</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="at_b" oninput="validateAT('at_b')"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+                    <div class="field"><div class="field-label">Current <span class="hint">1–1.7 A</span></div>
+                        <div class="field-control"><input type="number" inputmode="decimal" id="amps_b" oninput="validateThermistor('amps_b',1,1.7,0)" onkeydown="handleThermLastEnter(event)"><span class="state-ic"></span><span class="unit">A</span></div></div>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- SECTION 3: HEATING ELEMENTS -->
     <div class="section" id="section3">
-        <div class="section-header" onclick="toggleSection('section3', true)">Heating Elements</div>
+        <div class="section-header" onclick="toggleSection('section3')">
+            <span class="sh-num">3</span><span class="sh-name">Heating Elements</span>
+            <span class="sh-chip" id="chip3"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col" id="section3-content">
-            <label>UT - Upper Temp</label>
-            <input type="number" id="utTemp" oninput="validateUTLT('utTemp')">
-            <label>Upper Element Current</label>
-            <input type="number" id="upperElement" oninput="validateElementCurrent('upperElement')">
-            <label>LT - Lower Temp</label>
-            <input type="number" id="ltTemp" oninput="validateUTLT('ltTemp')">
-            <label>Lower Element Current</label>
-            <input type="number" id="lowerElement"
-                   oninput="validateElementCurrent('lowerElement')"
-                   onkeydown="handleHeatLastEnter(event)">
+            <div class="field"><div class="field-label">UT · Upper Temp <span class="hint">≈ water ±5%</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="utTemp" oninput="validateUTLT('utTemp')"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+            <div class="field"><div class="field-label">Upper Element Current <span class="hint">16–24 A</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="upperElement" oninput="validateElementCurrent('upperElement')"><span class="state-ic"></span><span class="unit">A</span></div></div>
+            <div class="field"><div class="field-label">LT · Lower Temp <span class="hint">≈ water ±5%</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="ltTemp" oninput="validateUTLT('ltTemp')"><span class="state-ic"></span><span class="unit">°F</span></div></div>
+            <div class="field"><div class="field-label">Lower Element Current <span class="hint">16–24 A</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="lowerElement" oninput="validateElementCurrent('lowerElement')" onkeydown="handleHeatLastEnter(event)"><span class="state-ic"></span><span class="unit">A</span></div></div>
         </div>
     </div>
 
     <!-- SECTION 4: CAPACITOR -->
     <div class="section" id="section4">
-        <div class="section-header" onclick="toggleSection('section4', true)">Capacitor</div>
+        <div class="section-header" onclick="toggleSection('section4')">
+            <span class="sh-num">4</span><span class="sh-name">Capacitor</span>
+            <span class="sh-chip" id="chip4"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col" id="section4-content">
-            <label>Volts Coming In</label>
-            <input type="number" id="capIn">
-            <label>Capacitor Volts</label>
-            <input type="number" id="capVolts" oninput="validateCapacitor()">
+            <div class="field"><div class="field-label">Volts Coming In <span class="hint">208 / 240 VAC</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="capIn"><span class="state-ic"></span><span class="unit">V</span></div></div>
+            <div class="field"><div class="field-label">Capacitor Volts <span class="hint">&ge; 310 V good</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="capVolts" oninput="validateCapacitor()"><span class="state-ic"></span><span class="unit">V</span></div></div>
         </div>
     </div>
 
     <!-- SECTION 5: COMPRESSOR -->
     <div class="section" id="section5">
-        <div class="section-header" onclick="toggleSection('section5', true)">Compressor</div>
+        <div class="section-header" onclick="toggleSection('section5')">
+            <span class="sh-num">5</span><span class="sh-name">Compressor</span>
+            <span class="sh-chip" id="chip5"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col" id="section5-content">
-            <label>Yellow → Red</label>
-            <input type="number" id="compYR" oninput="validateCompressor()">
-            <label>Yellow → Purple</label>
-            <input type="number" id="compYP" oninput="validateCompressor()">
-            <label>Red → Purple</label>
-            <input type="number" id="compRP" oninput="validateCompressor()">
+            <div class="field"><div class="field-label">Yellow → Red <span class="hint">winding A</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="compYR" oninput="validateCompressor()"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Yellow → Purple <span class="hint">winding B</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="compYP" oninput="validateCompressor()"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Red → Purple <span class="hint">≈ A + B (±5%)</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="compRP" oninput="validateCompressor()"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
         </div>
     </div>
 
     <!-- SECTION 6: COMPRESSOR TO GROUND -->
     <div class="section" id="section6">
-        <div class="section-header" onclick="toggleSection('section6', true)">Compressor To Ground</div>
+        <div class="section-header" onclick="toggleSection('section6')">
+            <span class="sh-num">6</span><span class="sh-name">Compressor To Ground</span>
+            <span class="sh-chip" id="chip6"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col" id="section6-content">
-            <label>Red → Ground</label>
-            <input type="text" id="compRedG" oninput="validateCompGround('compRedG')">
-            <label>Yellow → Ground</label>
-            <input type="text" id="compYelG" oninput="validateCompGround('compYelG')">
-            <label>Purple → Ground</label>
-            <input type="text" id="compPurG" oninput="validateCompGround('compPurG')">
+            <div class="field"><div class="field-label">Red → Ground <span class="hint">expect OL</span></div>
+                <div class="field-control"><input type="text" inputmode="text" id="compRedG" oninput="validateCompGround('compRedG')" placeholder="OL"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Yellow → Ground <span class="hint">expect OL</span></div>
+                <div class="field-control"><input type="text" inputmode="text" id="compYelG" oninput="validateCompGround('compYelG')" placeholder="OL"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Purple → Ground <span class="hint">expect OL</span></div>
+                <div class="field-control"><input type="text" inputmode="text" id="compPurG" oninput="validateCompGround('compPurG')" placeholder="OL"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
         </div>
     </div>
 
     <!-- SECTION 7: EXV -->
     <div class="section" id="section7">
-        <div class="section-header" onclick="toggleSection('section7', true)">EXV</div>
+        <div class="section-header" onclick="toggleSection('section7')">
+            <span class="sh-num">7</span><span class="sh-name">EXV</span>
+            <span class="sh-chip" id="chip7"></span><span class="sh-caret">▼</span>
+        </div>
         <div class="section-content single-col" id="section7-content">
-            <label>Orange → Yellow</label>
-            <input type="number" id="exvOY" oninput="validateEXV('exvOY',81.90,99.00)">
-            <label>Red → Black</label>
-            <input type="number" id="exvRB" oninput="validateEXV('exvRB',83.70,97.20)">
-            <label>Grey → Black</label>
-            <input type="number" id="exvGB" oninput="validateEXV('exvGB',42.80,48.50)">
-            <label>Grey → Yellow</label>
-            <input type="number" id="exvGY" oninput="validateEXV('exvGY',46.60,47.50)">
-            <label>Grey → Red</label>
-            <input type="number" id="exvGR" oninput="validateEXV('exvGR',41.60,48.50)">
-            <label>Grey → Orange</label>
-            <input type="number" id="exvGO" oninput="validateEXV('exvGO',41.90,49.10)">
+            <div class="field"><div class="field-label">Orange → Yellow <span class="hint">≈ 87.6 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvOY" oninput="validateEXV('exvOY',81.90,99.00)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Red → Black <span class="hint">≈ 88.2 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvRB" oninput="validateEXV('exvRB',83.70,97.20)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Grey → Black <span class="hint">≈ 44.7 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvGB" oninput="validateEXV('exvGB',42.80,48.50)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Grey → Yellow <span class="hint">≈ 87.6 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvGY" oninput="validateEXV('exvGY',46.60,47.50)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Grey → Red <span class="hint">≈ 43.9 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvGR" oninput="validateEXV('exvGR',41.60,48.50)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+            <div class="field"><div class="field-label">Grey → Orange <span class="hint">≈ 44.3 Ω</span></div>
+                <div class="field-control"><input type="number" inputmode="decimal" id="exvGO" oninput="validateEXV('exvGO',41.90,49.10)" onkeydown="handleExvLastEnter(event)"><span class="state-ic"></span><span class="unit">Ω</span></div></div>
+        </div>
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div class="results" id="resultsPanel">
+        <div class="results-head" id="resultsHead">
+            <span class="rh-dot"></span>
+            <span class="rh-title" id="resultsTitle">Diagnostic Summary</span>
+            <span class="rh-stat" id="resultsStat">0 flagged</span>
+        </div>
+        <div class="results-body" id="resultsBody">
+            <div class="res-empty">Enter readings above. Anything out of range is flagged here automatically.</div>
         </div>
     </div>
 
@@ -647,243 +676,346 @@
 
 </div>
 </div>
-</div>
 
 <script>
-// ═══════════════════════════════════════════
-// PAGE NAVIGATION
-// ═══════════════════════════════════════════
-function goToPage(pageId) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+/* ═══════════ PAGE NAVIGATION ═══════════ */
+function goToPage(pageId){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    if (pageId === 'pageTool') {
-        setTimeout(function() { document.getElementById('roomTemp').focus(); }, 100);
+    window.scrollTo({top:0,behavior:'instant'});
+    if(pageId==='pageTool'){
+        setTimeout(function(){ var r=document.getElementById('roomTemp'); if(r) r.focus(); },100);
     }
 }
 
-// ═══════════════════════════════════════════
-// DIAGNOSTIC TOOL LOGIC
-// ═══════════════════════════════════════════
-function toggleSection(sectionId) {
-    const content = document.getElementById(sectionId + '-content');
+/* ═══════════ SECTION OPEN/CLOSE ═══════════ */
+function toggleSection(sectionId){
+    var content=document.getElementById(sectionId+'-content');
+    var sec=document.getElementById(sectionId);
     content.classList.toggle('active');
+    sec.classList.toggle('open', content.classList.contains('active'));
 }
-
-function openSection(sectionId) {
-    const content = document.getElementById(sectionId + '-content');
+function openSection(sectionId){
+    var content=document.getElementById(sectionId+'-content');
+    var sec=document.getElementById(sectionId);
     content.classList.add('active');
+    sec.classList.add('open');
 }
 
-function resetTool() {
-    const inputs = document.querySelectorAll("input");
-    inputs.forEach(i => { i.value = ""; i.style.background = ""; });
-    const sections = document.querySelectorAll(".section-content");
-    sections.forEach(sec => sec.classList.remove("active"));
-    document.getElementById("section1-content").classList.add("active");
-    document.getElementById("feedbackStrip").style.display = "none";
-    document.getElementById("fbStatus").textContent = "";
-    document.getElementById("fbStatus").className = "fb-status";
-    document.getElementById("fbComment").value = "";
-    document.getElementById("fbSend").disabled = true;
-    document.querySelectorAll("#fbStars span").forEach(function(s) {
-        s.classList.remove("active");
+/* ═══════════ RESET ═══════════ */
+function resetTool(){
+    document.querySelectorAll('input').forEach(function(i){
+        i.value=''; setField(i,'');
     });
-    selectedRating = 0;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    document.getElementById("roomTemp").focus();
+    document.querySelectorAll('.section-content').forEach(function(sec){ sec.classList.remove('active'); });
+    document.querySelectorAll('.section').forEach(function(sec){ sec.classList.remove('open'); });
+    document.getElementById('section1-content').classList.add('active');
+    document.getElementById('section1').classList.add('open');
+    document.getElementById('feedbackStrip').style.display='none';
+    document.getElementById('fbStatus').textContent='';
+    document.getElementById('fbStatus').className='fb-status';
+    document.getElementById('fbComment').value='';
+    document.getElementById('fbSend').disabled=true;
+    document.querySelectorAll('#fbStars span').forEach(function(s){ s.classList.remove('active'); });
+    selectedRating=0;
+    saveState();
+    updateSummary();
+    window.scrollTo({top:0,behavior:'smooth'});
+    var r=document.getElementById('roomTemp'); if(r) r.focus();
 }
 
-function handleTempsEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section2');
-        document.getElementById('dt').focus();
+/* ═══════════ SECTION AUTO-ADVANCE ═══════════ */
+function handleTempsEnter(e){ if(e.key==='Enter'){ e.preventDefault(); openSection('section2'); document.getElementById('dt').focus(); } }
+function handleThermLastEnter(e){ if(e.key==='Enter'){ e.preventDefault(); openSection('section3'); document.getElementById('utTemp').focus(); } }
+function handleHeatLastEnter(e){ if(e.key==='Enter'){ e.preventDefault(); openSection('section4'); document.getElementById('capIn').focus(); } }
+function handleExvLastEnter(e){
+    if(e.key==='Enter'){ e.preventDefault();
+        document.getElementById('feedbackStrip').style.display='block';
+        document.getElementById('feedbackStrip').scrollIntoView({behavior:'smooth'});
     }
 }
 
-function handleThermLastEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section3');
-        document.getElementById('utTemp').focus();
-    }
-}
+document.addEventListener('DOMContentLoaded',function(){
+    document.getElementById('capVolts').addEventListener('keydown',function(e){
+        if(e.key==='Enter'){ e.preventDefault(); openSection('section5'); document.getElementById('compYR').focus(); }
+    });
+    document.getElementById('compRP').addEventListener('keydown',function(e){
+        if(e.key==='Enter'){ e.preventDefault(); openSection('section6'); document.getElementById('compRedG').focus(); }
+    });
+    document.getElementById('compPurG').addEventListener('keydown',function(e){
+        if(e.key==='Enter'){ e.preventDefault(); openSection('section7'); document.getElementById('exvOY').focus(); }
+    });
 
-function handleHeatLastEnter(e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        openSection('section4');
-        document.getElementById('capIn').focus();
-    }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("capVolts").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section5');
-            document.getElementById('compYR').focus();
-        }
-    });
-    document.getElementById("compRP").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section6');
-            document.getElementById('compRedG').focus();
-        }
-    });
-    document.getElementById("compPurG").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            openSection('section7');
-            document.getElementById('exvOY').focus();
-        }
-    });
-    document.getElementById("exvGO").addEventListener("keydown", function(e) {
-        if (e.key === "Enter") {
-            e.preventDefault();
-            document.getElementById("feedbackStrip").style.display = "block";
-            document.getElementById("feedbackStrip").scrollIntoView({ behavior: "smooth" });
-        }
-    });
-    let allInputs = Array.from(document.querySelectorAll("input"));
-    allInputs.forEach((input, i) => {
-        input.addEventListener("keydown", function(e) {
-            if (e.defaultPrevented) return;
-            if (e.key === "Enter" || e.key === "ArrowDown") {
+    var allInputs=Array.from(document.querySelectorAll('input'));
+    allInputs.forEach(function(input,i){
+        input.addEventListener('keydown',function(e){
+            if(e.defaultPrevented) return;
+            if(e.key==='Enter'||e.key==='ArrowDown'){
                 e.preventDefault();
-                const next = allInputs[i + 1];
-                if (next) { next.focus(); next.select(); }
+                var next=allInputs[i+1];
+                if(next){ next.focus(); next.select(); }
             }
-            if (e.key === "ArrowUp") {
+            if(e.key==='ArrowUp'){
                 e.preventDefault();
-                const prev = allInputs[i - 1];
-                if (prev) { prev.focus(); prev.select(); }
+                var prev=allInputs[i-1];
+                if(prev){ prev.focus(); prev.select(); }
             }
         });
+        input.addEventListener('input', function(){ saveState(); });
     });
+
+    loadState();
+    updateSummary();
 });
 
-// ═══════════════════════════════════════════
-// VALIDATION FUNCTIONS
-// ═══════════════════════════════════════════
-function validateThermistor(id,min,max,low) {
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v) || v < low) { el.style.background = ""; return; }
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateAT(id){
-    const room = parseFloat(document.getElementById("roomTemp").value);
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(room) || isNaN(v)) { el.style.background = ""; return; }
-    const min = room * 0.92, max = room * 1.08;
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateElementCurrent(id){
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    el.style.background = (v >= 16 && v <= 24) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateUTLT(id){
-    const water = parseFloat(document.getElementById("waterTemp").value);
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(water) || isNaN(v)) { el.style.background = ""; return; }
-    const min = water * 0.95, max = water * 1.05;
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateCapacitor(){
-    const el = document.getElementById("capVolts");
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    if (v >= 310 && v <= 400) el.style.background = "#c8f7c5";
-    else if (v >= 288 && v <= 309) el.style.background = "#fff7a8";
-    else if (v >= 10 && v <= 287) el.style.background = "#f7c5c5";
-    else el.style.background = "";
-}
-function validateCompressor(){
-    const yr = parseFloat(document.getElementById("compYR").value);
-    const yp = parseFloat(document.getElementById("compYP").value);
-    const rpEl = document.getElementById("compRP");
-    const rp = parseFloat(rpEl.value);
-    if (isNaN(rp) || isNaN(yr) || isNaN(yp)) { rpEl.style.background = ""; return; }
-    const sum = yr + yp, min = rp * 0.95, max = rp * 1.05;
-    rpEl.style.background = (sum >= min && sum <= max) ? "#c8f7c5" : "#f7c5c5";
-}
-function validateCompGround(id){
-    const el = document.getElementById(id);
-    const v = el.value.trim().toUpperCase();
-    if (v === "") { el.style.background = ""; return; }
-    el.style.background = (v === "OL") ? "#c8f7c5" : "#f7c5c5";
-}
-function validateEXV(id,min,max){
-    const el = document.getElementById(id);
-    const v = parseFloat(el.value);
-    if (isNaN(v)) { el.style.background = ""; return; }
-    el.style.background = (v >= min && v <= max) ? "#c8f7c5" : "#f7c5c5";
+/* ═══════════ STATE HELPER (drives color + icon + summary) ═══════════ */
+function setField(el, state){
+    if(typeof el==='string') el=document.getElementById(el);
+    if(!el) return;
+    el.dataset.state = state || '';
+    var field=el.closest('.field');
+    if(field){
+        field.classList.remove('is-pass','is-fail','is-warn');
+        if(state==='pass') field.classList.add('is-pass');
+        else if(state==='fail') field.classList.add('is-fail');
+        else if(state==='warn') field.classList.add('is-warn');
+    }
 }
 
-// ═══════════════════════════════════════════
-// FEEDBACK — Google Sheets auto-collection
-// ═══════════════════════════════════════════
-var selectedRating = 0;
-(function () {
-    var FEEDBACK_URL =
-        'https://script.google.com/macros/s/AKfycbyHb-rUHlHOI29xAWJSIa5VBoEK-aEy8mzzWQJXg7F9w1jlmKVN5udxAXPEsoTmnEIR/exec';
-    function getDeviceInfo() {
-        var ua = navigator.userAgent;
-        var platform = /iPad/.test(ua) ? 'iPad'
-            : /iPhone/.test(ua) ? 'iPhone'
-            : /Android/.test(ua) ? 'Android'
-            : 'Desktop';
-        var browser = /Chrome\/(\d+)/.test(ua) ? 'Chrome ' + RegExp.$1
-            : /Safari\//.test(ua) ? 'Safari'
-            : /Firefox\/(\d+)/.test(ua) ? 'Firefox ' + RegExp.$1
-            : 'Other';
-        return platform + ' / ' + browser + ' / ' + navigator.platform;
+/* ═══════════ VALIDATION (logic + thresholds unchanged) ═══════════ */
+function validateThermistor(id,min,max,low){
+    var el=document.getElementById(id);
+    var v=parseFloat(el.value);
+    if(isNaN(v)||v<low){ setField(el,''); return finish(); }
+    setField(el,(v>=min&&v<=max)?'pass':'fail'); finish();
+}
+function validateAT(id){
+    var room=parseFloat(document.getElementById('roomTemp').value);
+    var el=document.getElementById(id);
+    var v=parseFloat(el.value);
+    if(isNaN(room)||isNaN(v)){ setField(el,''); return finish(); }
+    var min=room*0.92, max=room*1.08;
+    setField(el,(v>=min&&v<=max)?'pass':'fail'); finish();
+}
+function validateElementCurrent(id){
+    var el=document.getElementById(id);
+    var v=parseFloat(el.value);
+    if(isNaN(v)){ setField(el,''); return finish(); }
+    setField(el,(v>=16&&v<=24)?'pass':'fail'); finish();
+}
+function validateUTLT(id){
+    var water=parseFloat(document.getElementById('waterTemp').value);
+    var el=document.getElementById(id);
+    var v=parseFloat(el.value);
+    if(isNaN(water)||isNaN(v)){ setField(el,''); return finish(); }
+    var min=water*0.95, max=water*1.05;
+    setField(el,(v>=min&&v<=max)?'pass':'fail'); finish();
+}
+function validateCapacitor(){
+    var el=document.getElementById('capVolts');
+    var v=parseFloat(el.value);
+    if(isNaN(v)){ setField(el,''); return finish(); }
+    if(v>=310&&v<=400) setField(el,'pass');
+    else if(v>=288&&v<=309) setField(el,'warn');
+    else if(v>=10&&v<=287) setField(el,'fail');
+    else setField(el,'');
+    finish();
+}
+function validateCompressor(){
+    var yr=parseFloat(document.getElementById('compYR').value);
+    var yp=parseFloat(document.getElementById('compYP').value);
+    var rpEl=document.getElementById('compRP');
+    var rp=parseFloat(rpEl.value);
+    if(isNaN(rp)||isNaN(yr)||isNaN(yp)){ setField(rpEl,''); return finish(); }
+    var sum=yr+yp, min=rp*0.95, max=rp*1.05;
+    setField(rpEl,(sum>=min&&sum<=max)?'pass':'fail'); finish();
+}
+function validateCompGround(id){
+    var el=document.getElementById(id);
+    var v=el.value.trim().toUpperCase();
+    if(v===''){ setField(el,''); return finish(); }
+    setField(el,(v==='OL')?'pass':'fail'); finish();
+}
+function validateEXV(id,min,max){
+    var el=document.getElementById(id);
+    var v=parseFloat(el.value);
+    if(isNaN(v)){ setField(el,''); return finish(); }
+    setField(el,(v>=min&&v<=max)?'pass':'fail'); finish();
+}
+function finish(){ saveState(); updateSummary(); }
+
+/* ═══════════ LIVE SUMMARY ═══════════ */
+var FIELD_LABELS={
+    roomTemp:'Room Temp', waterTemp:'Water Temp',
+    dt:'DT · Test 1', st:'ST · Test 1', et:'ET · Test 1', at:'AT · Test 1', amps:'Current · Test 1',
+    dt_b:'DT · Test 2', st_b:'ST · Test 2', et_b:'ET · Test 2', at_b:'AT · Test 2', amps_b:'Current · Test 2',
+    utTemp:'Upper Tank Temp', upperElement:'Upper Element Current',
+    ltTemp:'Lower Tank Temp', lowerElement:'Lower Element Current',
+    capIn:'Volts Coming In', capVolts:'Capacitor Volts',
+    compYR:'Compressor Y→R', compYP:'Compressor Y→P', compRP:'Compressor R→P',
+    compRedG:'Comp Red→Ground', compYelG:'Comp Yellow→Ground', compPurG:'Comp Purple→Ground',
+    exvOY:'EXV Orange→Yellow', exvRB:'EXV Red→Black', exvGB:'EXV Grey→Black',
+    exvGY:'EXV Grey→Yellow', exvGR:'EXV Grey→Red', exvGO:'EXV Grey→Orange'
+};
+var FIELD_TARGET={
+    dt:'< 160°F', st:'38–90°F', et:'< 70°F', at:'≈ room ±8%', amps:'1–1.7 A',
+    dt_b:'< 160°F', st_b:'38–90°F', et_b:'< 70°F', at_b:'≈ room ±8%', amps_b:'1–1.7 A',
+    utTemp:'≈ water ±5%', upperElement:'16–24 A', ltTemp:'≈ water ±5%', lowerElement:'16–24 A',
+    capVolts:'≥ 310 V', compRP:'≈ sum ±5%',
+    compRedG:'OL', compYelG:'OL', compPurG:'OL',
+    exvOY:'≈ 87.6 Ω', exvRB:'≈ 88.2 Ω', exvGB:'≈ 44.7 Ω', exvGY:'≈ 87.6 Ω', exvGR:'≈ 43.9 Ω', exvGO:'≈ 44.3 Ω'
+};
+var SECTION_FIELDS={
+    section1:['roomTemp','waterTemp'],
+    section2:['dt','st','et','at','amps','dt_b','st_b','et_b','at_b','amps_b'],
+    section3:['utTemp','upperElement','ltTemp','lowerElement'],
+    section4:['capIn','capVolts'],
+    section5:['compYR','compYP','compRP'],
+    section6:['compRedG','compYelG','compPurG'],
+    section7:['exvOY','exvRB','exvGB','exvGY','exvGR','exvGO']
+};
+
+function updateSummary(){
+    var inputs=Array.from(document.querySelectorAll('input'));
+    var filled=inputs.filter(function(i){ return i.value.trim()!==''; }).length;
+    var total=inputs.length;
+    document.getElementById('progressCount').textContent=filled+' / '+total;
+    document.getElementById('progressFill').style.width=(total? (filled/total*100):0)+'%';
+
+    Object.keys(SECTION_FIELDS).forEach(function(sid){
+        var chip=document.getElementById('chip'+sid.replace('section',''));
+        if(!chip) return;
+        var fails=0, warns=0, any=false;
+        SECTION_FIELDS[sid].forEach(function(fid){
+            var el=document.getElementById(fid);
+            if(el&&el.value.trim()!=='') any=true;
+            if(el&&el.dataset.state==='fail') fails++;
+            if(el&&el.dataset.state==='warn') warns++;
+        });
+        chip.className='sh-chip';
+        if(fails){ chip.classList.add('bad'); chip.textContent=fails+' off'; }
+        else if(warns){ chip.classList.add('warn'); chip.textContent='check'; }
+        else if(any){ chip.classList.add('ok'); chip.textContent='ok'; }
+        else chip.textContent='';
+    });
+
+    var flags=[];
+    inputs.forEach(function(el){
+        var s=el.dataset.state;
+        if(s==='fail'||s==='warn'){
+            flags.push({id:el.id, state:s, val:el.value.trim(), label:FIELD_LABELS[el.id]||el.id, target:FIELD_TARGET[el.id]||''});
+        }
+    });
+
+    var head=document.getElementById('resultsHead');
+    var body=document.getElementById('resultsBody');
+    var stat=document.getElementById('resultsStat');
+    var titleEl=document.getElementById('resultsTitle');
+    var failCount=flags.filter(function(f){return f.state==='fail';}).length;
+    var warnCount=flags.filter(function(f){return f.state==='warn';}).length;
+
+    head.className='results-head';
+    if(failCount){ head.classList.add('has-fail'); titleEl.textContent='Issues Found'; }
+    else if(warnCount){ head.classList.add('has-warn'); titleEl.textContent='Borderline'; }
+    else if(filled>0){ head.classList.add('all-pass'); titleEl.textContent='All Within Range'; }
+    else titleEl.textContent='Diagnostic Summary';
+    stat.textContent = flags.length ? (failCount+' off · '+warnCount+' check') : (filled>0?'all ok':'0 flagged');
+
+    var html='';
+    if(flags.length===0){
+        html = filled>0
+            ? '<div class="res-empty" style="color:var(--pass)">✓ Every entered reading is within spec.</div>'
+            : '<div class="res-empty">Enter readings above. Anything out of range is flagged here automatically.</div>';
+    } else {
+        flags.forEach(function(f){
+            html+='<div class="flag f-'+f.state+'">'
+                +'<span class="f-ic">'+(f.state==='fail'?'✕':'!')+'</span>'
+                +'<span class="f-name">'+f.label+'</span>'
+                +'<span class="f-val">'+f.val+'</span>'
+                +(f.target?'<span class="f-target">target '+f.target+'</span>':'')
+                +'</div>';
+        });
     }
-    async function submitFeedback(rating, comment) {
-        var payload = {
-            rating: rating, comment: comment,
-            timestamp: new Date().toISOString(), deviceInfo: getDeviceInfo()
-        };
-        try {
-            var res = await fetch(FEEDBACK_URL, {
-                method: 'POST', headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify(payload)
-            });
-            return res.ok || res.type === 'opaque';
-        } catch (err) { console.error('Feedback error:', err); return false; }
+
+    /* DT rise between tests (reference: should increase 10–15°F) */
+    var dt1=parseFloat(document.getElementById('dt').value);
+    var dt2=parseFloat(document.getElementById('dt_b').value);
+    if(!isNaN(dt1)&&!isNaN(dt2)){
+        var rise=Math.round((dt2-dt1)*10)/10;
+        var ok=(rise>=10&&rise<=15);
+        html+='<div class="res-note"><span class="rn-title">DT rise across tests</span>'
+            +'Discharge moved <b style="color:'+(ok?'var(--pass)':'var(--warn)')+'">'+(rise>0?'+':'')+rise+'°F</b> from Test 1 to Test 2. '
+            +'Reference: should increase 10–15°F between tests.'+(ok?'':' <b style="color:var(--warn)">Out of expected band.</b>')+'</div>';
     }
-    var stars   = document.querySelectorAll('#fbStars span');
-    var sendBtn = document.getElementById('fbSend');
-    var status  = document.getElementById('fbStatus');
-    stars.forEach(function (s) {
-        s.addEventListener('click', function () {
-            selectedRating = +s.dataset.v;
-            stars.forEach(function (st) {
-                st.classList.toggle('active', +st.dataset.v <= selectedRating);
-            });
-            sendBtn.disabled = false;
+
+    if(filled>0){
+        html+='<div class="res-note"><span class="rn-title">Next steps (per reference guide)</span><ul>'
+            +'<li>If <b>one</b> temp is excessively high while others fluctuate normally — recheck that thermistor, no further testing needed.</li>'
+            +'<li>If <b>all</b> temps stay near AT with no fluctuation — test the Expansion (EXV) and Compressor.</li>'
+            +'<li>If <b>DT and ET</b> stay close and drop in temperature — inspect installation and venting.</li>'
+            +'</ul></div>';
+    }
+
+    body.innerHTML=html;
+}
+
+/* ═══════════ AUTOSAVE (survives screen lock; safe if storage blocked) ═══════════ */
+var STORE_KEY='dgHwtDiag_v1';
+function saveState(){
+    try{
+        var data={};
+        document.querySelectorAll('input').forEach(function(i){ if(i.value!=='') data[i.id]=i.value; });
+        localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    }catch(e){}
+}
+function loadState(){
+    try{
+        var raw=localStorage.getItem(STORE_KEY);
+        if(!raw) return;
+        var data=JSON.parse(raw);
+        Object.keys(data).forEach(function(id){
+            var el=document.getElementById(id);
+            if(el){ el.value=data[id]; if(el.oninput) el.oninput(); }
+        });
+    }catch(e){}
+}
+
+/* ═══════════ FEEDBACK — Google Sheets auto-collection (unchanged) ═══════════ */
+var selectedRating=0;
+(function(){
+    var FEEDBACK_URL='https://script.google.com/macros/s/AKfycbyHb-rUHlHOI29xAWJSIa5VBoEK-aEy8mzzWQJXg7F9w1jlmKVN5udxAXPEsoTmnEIR/exec';
+    function getDeviceInfo(){
+        var ua=navigator.userAgent;
+        var platform=/iPad/.test(ua)?'iPad':/iPhone/.test(ua)?'iPhone':/Android/.test(ua)?'Android':'Desktop';
+        var browser=/Chrome\/(\d+)/.test(ua)?'Chrome '+RegExp.$1:/Safari\//.test(ua)?'Safari':/Firefox\/(\d+)/.test(ua)?'Firefox '+RegExp.$1:'Other';
+        return platform+' / '+browser+' / '+navigator.platform;
+    }
+    async function submitFeedback(rating,comment){
+        var payload={rating:rating,comment:comment,timestamp:new Date().toISOString(),deviceInfo:getDeviceInfo()};
+        try{
+            var res=await fetch(FEEDBACK_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+            return res.ok||res.type==='opaque';
+        }catch(err){ console.error('Feedback error:',err); return false; }
+    }
+    var stars=document.querySelectorAll('#fbStars span');
+    var sendBtn=document.getElementById('fbSend');
+    var status=document.getElementById('fbStatus');
+    stars.forEach(function(s){
+        s.addEventListener('click',function(){
+            selectedRating=+s.dataset.v;
+            stars.forEach(function(st){ st.classList.toggle('active',+st.dataset.v<=selectedRating); });
+            sendBtn.disabled=false;
         });
     });
-    sendBtn.addEventListener('click', async function () {
-        sendBtn.disabled = true;
-        status.textContent = 'Sending…';
-        status.className = 'fb-status';
-        var ok = await submitFeedback(
-            selectedRating,
-            document.getElementById('fbComment').value.trim() || '(no comment)'
-        );
-        status.textContent = ok ? '✓ Thanks!' : '✗ Failed — try again';
-        status.className = 'fb-status ' + (ok ? 'success' : 'error');
-        if (!ok) sendBtn.disabled = false;
+    sendBtn.addEventListener('click',async function(){
+        sendBtn.disabled=true;
+        status.textContent='Sending…'; status.className='fb-status';
+        var ok=await submitFeedback(selectedRating, document.getElementById('fbComment').value.trim()||'(no comment)');
+        status.textContent=ok?'✓ Thanks!':'✗ Failed — try again';
+        status.className='fb-status '+(ok?'success':'error');
+        if(!ok) sendBtn.disabled=false;
     });
-    document.getElementById('fbDevice').textContent = getDeviceInfo();
+    document.getElementById('fbDevice').textContent=getDeviceInfo();
 })();
 </script>
 
